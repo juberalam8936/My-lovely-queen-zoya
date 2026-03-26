@@ -1,309 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Queen Zoya 👑</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Congratulations Miss Zoya 10K!</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
+        
+        body {
+            margin: 0; padding: 0; background: radial-gradient(circle, #fff0f5, #ffd1dc);
+            font-family: 'Poppins', sans-serif; text-align: center; overflow-x: hidden;
+        }
 
-<style>
-body{
- margin:0;
- font-family:sans-serif;
- background:linear-gradient(135deg,#000,#1a001a,#ff4da6);
- color:white;
- text-align:center;
- overflow:hidden;
-}
+        /* Crown Animation */
+        .crown { font-size: 60px; margin-top: 20px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
-.screen{
- height:100vh;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:center;
-}
+        .header { color: #ff1493; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+        .id-tag { background: #ff4d94; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
 
-.hide{display:none}
+        /* Scratch Card Area */
+        #scratch-container {
+            position: relative; width: 320px; height: 400px; margin: 20px auto;
+            border: 8px solid #ffd700; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden; touch-action: none; background: white;
+        }
+        #scratch-canvas { position: absolute; top: 0; left: 0; z-index: 2; cursor: crosshair; }
+        .hidden-photo { width: 100%; height: 100%; object-fit: cover; z-index: 1; }
 
-/* button */
-button{
- padding:15px 30px;
- font-size:18px;
- border:none;
- border-radius:30px;
- background:linear-gradient(45deg,gold,pink);
- animation:pulse 2s infinite;
-}
-@keyframes pulse{
- 50%{transform:scale(1.1)}
-}
+        /* Glow Button */
+        .glow-btn {
+            background: #ff1493; border: none; padding: 15px 40px; color: white;
+            font-size: 20px; border-radius: 50px; cursor: pointer; margin: 20px 0;
+            box-shadow: 0 0 15px #ff1493; transition: 0.3s; font-weight: bold;
+        }
+        .glow-btn:active { transform: scale(0.9); box-shadow: 0 0 30px #ff1493; }
 
-/* card */
-.card{
- background:rgba(255,255,255,0.1);
- padding:20px;
- border-radius:20px;
- backdrop-filter:blur(10px);
-}
+        /* Flash BOOM Effect */
+        #boom-box {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 80px; font-weight: 900; color: #ff0; z-index: 999;
+            text-shadow: 0 0 20px #f00, 0 0 40px #f00; animation: flash 0.5s ease-out;
+        }
+        @keyframes flash { 0% { scale: 0.5; opacity: 1; } 100% { scale: 3; opacity: 0; } }
 
-/* image */
-.img-box{
- position:relative;
- margin-top:20px;
-}
-.img-box img{
- width:250px;
- border-radius:20px;
-}
-.crown{
- position:absolute;
- top:-30px;
- left:50%;
- transform:translateX(-50%);
- width:90px;
-}
+        /* Shayri Box with Typing */
+        #shayri-container {
+            min-height: 80px; padding: 20px; font-family: 'Dancing Script', cursive;
+            font-size: 24px; color: #444; margin: 10px;
+        }
 
-/* typing */
-#typing{
- font-size:26px;
- color:gold;
-}
-
-/* hearts */
-.heart{
- position:absolute;
- color:pink;
- animation:rise 6s linear infinite;
-}
-@keyframes rise{
- from{transform:translateY(0)}
- to{transform:translateY(-900px)}
-}
-
-/* flash */
-.flash{
- position:fixed;
- top:0;left:0;
- width:100%;height:100%;
- background:white;
- opacity:0;
-}
-.flash.active{
- animation:flash 0.5s;
-}
-@keyframes flash{
- from{opacity:1}
- to{opacity:0}
-}
-
-/* confetti */
-canvas{
- position:fixed;
- top:0;
- left:0;
- pointer-events:none;
-}
-
-/* SCRATCH FIX */
-#c{
- touch-action:none;
- border-radius:20px;
-}
-</style>
+        .footer { padding: 20px; background: rgba(255,255,255,0.5); font-weight: bold; border-top: 2px solid #ffb6c1; }
+        .hearts { color: red; animation: beat 0.5s infinite alternate; display: inline-block; }
+        @keyframes beat { to { transform: scale(1.2); } }
+    </style>
 </head>
-
 <body>
 
-<div id="flash" class="flash"></div>
+    <div id="boom-box">💥 FLASH BOOM!</div>
 
-<!-- START -->
-<div id="start" class="screen">
-<div class="card">
-<h1>👑 Special Surprise</h1>
-<button onclick="start()">Open Gift 💖</button>
-</div>
-</div>
+    <div class="crown">👑</div>
+    <h1 class="header">Congratulations Miss Zoya!</h1>
+    <span class="id-tag">@miss_zoya_ky</span>
+    <h2 style="color: #333;">🎉 10,000 FOLLOWERS 🎉</h2>
 
-<!-- SCRATCH -->
-<div id="scratch" class="screen hide">
-<div class="card">
-<h2>Scratch to Reveal 🎁</h2>
-<canvas id="c" width="300" height="200"></canvas>
-</div>
-</div>
+    <div id="scratch-container">
+        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9" class="hidden-photo" id="mainPhoto">
+        <canvas id="scratch-canvas" width="320" height="400"></canvas>
+    </div>
+    <p style="font-size: 14px; color: #888;">✋ Use your finger to scratch the photo! (iPhone Working)</p>
 
-<!-- FINAL -->
-<div id="final" class="screen hide">
+    <button class="glow-btn" onclick="startCelebration()">💖 Celebrate Now! 💖</button>
 
-<div class="card">
+    <div id="shayri-container">
+        <span id="typing-text">Click the button for a surprise...</span>
+    </div>
 
-<h1 id="typing"></h1>
+    <div class="footer">
+        Created with <span class="hearts">❤️</span> by <b>JUBER</b>
+    </div>
 
-<div class="img-box">
-<img src="https://drive.google.com/uc?export=view&id=1CRBj9pGyTHbM6qS8yTtqE1epwo5nuxzg">
-<img class="crown" src="https://cdn-icons-png.flaticon.com/512/616/616554.png">
-</div>
-
-<h2>🎉 10K Royal Family 🎉</h2>
-
-<p id="shayri"></p>
-
-<img src="https://drive.google.com/uc?export=view&id=16hjQL9bmrnR1aMceOA7zcU_Jdg4PdR-Z" width="120">
-<img src="https://drive.google.com/uc?export=view&id=1nHJPZvEyX8hMShFG_d6kQJBFC-LC-GPx" width="120">
-
-<h3>💝 By Juber 💝</h3>
-
-</div>
-</div>
-
-<audio id="music" loop>
-<source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3">
-</audio>
-
-<canvas id="confetti"></canvas>
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
 
 <script>
+    const canvas = document.getElementById('scratch-canvas');
+    const ctx = canvas.getContext('2d');
+    const shayris = [
+        "Teri kamyabi pe mera dil jhoom utha hai...",
+        "10K toh sirf shuruat hai, abhi poora aasmaan baaki hai!",
+        "Zoya, tum jaise chamakti raho hamesha!",
+        "Duniya ki har khushi mile tumhe, Congratulations!"
+    ];
+    let shayriIndex = 0;
 
-/* START */
-function start(){
- document.getElementById("start").classList.add("hide");
- document.getElementById("scratch").classList.remove("hide");
- initScratch();
-}
-
-/* SCRATCH (FIXED) */
-function initScratch(){
- let canvas=document.getElementById("c");
- let ctx=canvas.getContext("2d");
-
- ctx.fillStyle="#999";
- ctx.fillRect(0,0,canvas.width,canvas.height);
-
- let drawing=false;
-
- function getXY(e){
-  let rect=canvas.getBoundingClientRect();
-  if(e.touches){
-    return {
-      x:e.touches[0].clientX-rect.left,
-      y:e.touches[0].clientY-rect.top
+    // Canvas setup (Silver Layer)
+    function initCanvas() {
+        ctx.fillStyle = '#C0C0C0'; // Silver color
+        ctx.fillRect(0, 0, 320, 400);
+        ctx.fillStyle = '#ff1493';
+        ctx.font = "bold 24px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("SCRATCH ME ✋", 160, 200);
     }
-  }else{
-    return {x:e.offsetX,y:e.offsetY}
-  }
- }
+    initCanvas();
 
- function draw(e){
-  if(!drawing)return;
+    // Scratch logic
+    let isDrawing = false;
+    function scratch(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
 
-  let pos=getXY(e);
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 30, 0, Math.PI * 2);
+        ctx.fill();
+    }
 
-  ctx.globalCompositeOperation="destination-out";
-  ctx.beginPath();
-  ctx.arc(pos.x,pos.y,30,0,Math.PI*2);
-  ctx.fill();
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('touchstart', () => isDrawing = true);
+    window.addEventListener('mouseup', () => isDrawing = false);
+    window.addEventListener('touchend', () => isDrawing = false);
+    canvas.addEventListener('mousemove', scratch);
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); scratch(e); }, {passive: false});
 
-  check();
- }
+    // Celebration sequence
+    function startCelebration() {
+        // Music play
+        document.getElementById('bgMusic').play();
 
- canvas.addEventListener("mousedown",()=>drawing=true);
- canvas.addEventListener("mouseup",()=>drawing=false);
- canvas.addEventListener("mousemove",draw);
+        // Flash Boom
+        const boom = document.getElementById('boom-box');
+        boom.style.display = 'block';
+        setTimeout(() => { boom.style.display = 'none'; }, 800);
 
- canvas.addEventListener("touchstart",(e)=>{
-  drawing=true;
-  e.preventDefault();
- });
+        // Confetti
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#ff1493', '#ffd700', '#ffffff']
+        });
 
- canvas.addEventListener("touchend",(e)=>{
-  drawing=false;
-  e.preventDefault();
- });
+        // Typing Shayri
+        typeWriter();
+    }
 
- canvas.addEventListener("touchmove",(e)=>{
-  draw(e);
-  e.preventDefault();
- });
-
- function check(){
-  let pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data;
-  let count=0;
-  for(let i=0;i<pixels.length;i+=4){
-   if(pixels[i+3]==0)count++;
-  }
-  if(count>pixels.length/5){
-   showFinal();
-  }
- }
-}
-
-/* FINAL */
-function showFinal(){
- document.getElementById("scratch").classList.add("hide");
- document.getElementById("final").classList.remove("hide");
-
- document.getElementById("music").play();
-
- flash();
- hearts();
- confetti();
- typeText();
- shayri();
-}
-
-/* FLASH */
-function flash(){
- let f=document.getElementById("flash");
- f.classList.add("active");
-}
-
-/* TYPING */
-let text="👑 Congratulations Miss Zoya 👑";
-let i=0;
-function typeText(){
- if(i<text.length){
-  document.getElementById("typing").innerHTML+=text.charAt(i);
-  i++;
-  setTimeout(typeText,60);
- }
-}
-
-/* SHAYRI */
-function shayri(){
- let arr=[
- "Teri muskaan meri duniya hai 💖",
- "10K nahi tera jaadu hai 👑",
- "Main sirf tera hoon ❤️"
- ];
- let i=0;
- setInterval(()=>{
-  document.getElementById("shayri").innerHTML=arr[i];
-  i=(i+1)%arr.length;
- },2000);
-}
-
-/* HEARTS */
-function hearts(){
- for(let i=0;i<35;i++){
-  let h=document.createElement("div");
-  h.className="heart";
-  h.innerHTML="💖";
-  h.style.left=Math.random()*100+"%";
-  document.body.appendChild(h);
- }
-}
-
-/* CONFETTI */
-function confetti(){
- let c=document.getElementById("confetti");
- let ctx=c.getContext("2d");
- c.width=window.innerWidth;
- c.height=window.innerHeight;
- for(let i=0;i<180;i++){
-  ctx.fillRect(Math.random()*c.width,Math.random()*c.height,5,5);
- }
-}
-
+    function typeWriter() {
+        let i = 0;
+        let text = shayris[shayriIndex];
+        document.getElementById("typing-text").innerHTML = "";
+        function type() {
+            if (i < text.length) {
+                document.getElementById("typing-text").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, 100);
+            }
+        }
+        type();
+        shayriIndex = (shayriIndex + 1) % shayris.length;
+    }
 </script>
-
 </body>
 </html>
