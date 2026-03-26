@@ -102,6 +102,12 @@ canvas{
  left:0;
  pointer-events:none;
 }
+
+/* SCRATCH FIX */
+#c{
+ touch-action:none;
+ border-radius:20px;
+}
 </style>
 </head>
 
@@ -137,7 +143,7 @@ canvas{
 <img class="crown" src="https://cdn-icons-png.flaticon.com/512/616/616554.png">
 </div>
 
-<h2>🎉 10K Family 🎉</h2>
+<h2>🎉 10K Royal Family 🎉</h2>
 
 <p id="shayri"></p>
 
@@ -157,39 +163,51 @@ canvas{
 
 <script>
 
-/* start */
+/* START */
 function start(){
  document.getElementById("start").classList.add("hide");
  document.getElementById("scratch").classList.remove("hide");
  initScratch();
 }
 
-/* scratch */
+/* SCRATCH (FIXED) */
 function initScratch(){
  let canvas=document.getElementById("c");
  let ctx=canvas.getContext("2d");
-
- canvas.style.touchAction="none";
 
  ctx.fillStyle="#999";
  ctx.fillRect(0,0,canvas.width,canvas.height);
 
  let drawing=false;
 
- function draw(x,y){
+ function getXY(e){
+  let rect=canvas.getBoundingClientRect();
+  if(e.touches){
+    return {
+      x:e.touches[0].clientX-rect.left,
+      y:e.touches[0].clientY-rect.top
+    }
+  }else{
+    return {x:e.offsetX,y:e.offsetY}
+  }
+ }
+
+ function draw(e){
+  if(!drawing)return;
+
+  let pos=getXY(e);
+
   ctx.globalCompositeOperation="destination-out";
   ctx.beginPath();
-  ctx.arc(x,y,30,0,Math.PI*2);
+  ctx.arc(pos.x,pos.y,30,0,Math.PI*2);
   ctx.fill();
+
   check();
  }
 
  canvas.addEventListener("mousedown",()=>drawing=true);
  canvas.addEventListener("mouseup",()=>drawing=false);
- canvas.addEventListener("mousemove",e=>{
-  if(!drawing)return;
-  draw(e.offsetX,e.offsetY);
- });
+ canvas.addEventListener("mousemove",draw);
 
  canvas.addEventListener("touchstart",(e)=>{
   drawing=true;
@@ -202,13 +220,7 @@ function initScratch(){
  });
 
  canvas.addEventListener("touchmove",(e)=>{
-  if(!drawing)return;
-
-  let rect=canvas.getBoundingClientRect();
-  let x=e.touches[0].clientX-rect.left;
-  let y=e.touches[0].clientY-rect.top;
-
-  draw(x,y);
+  draw(e);
   e.preventDefault();
  });
 
@@ -218,13 +230,13 @@ function initScratch(){
   for(let i=0;i<pixels.length;i+=4){
    if(pixels[i+3]==0)count++;
   }
-  if(count>pixels.length/6){
+  if(count>pixels.length/5){
    showFinal();
   }
  }
 }
 
-/* final */
+/* FINAL */
 function showFinal(){
  document.getElementById("scratch").classList.add("hide");
  document.getElementById("final").classList.remove("hide");
@@ -238,24 +250,24 @@ function showFinal(){
  shayri();
 }
 
-/* flash */
+/* FLASH */
 function flash(){
  let f=document.getElementById("flash");
  f.classList.add("active");
 }
 
-/* typing */
+/* TYPING */
 let text="👑 Congratulations Miss Zoya 👑";
 let i=0;
 function typeText(){
  if(i<text.length){
   document.getElementById("typing").innerHTML+=text.charAt(i);
   i++;
-  setTimeout(typeText,70);
+  setTimeout(typeText,60);
  }
 }
 
-/* shayri */
+/* SHAYRI */
 function shayri(){
  let arr=[
  "Teri muskaan meri duniya hai 💖",
@@ -269,9 +281,9 @@ function shayri(){
  },2000);
 }
 
-/* hearts */
+/* HEARTS */
 function hearts(){
- for(let i=0;i<30;i++){
+ for(let i=0;i<35;i++){
   let h=document.createElement("div");
   h.className="heart";
   h.innerHTML="💖";
@@ -280,13 +292,13 @@ function hearts(){
  }
 }
 
-/* confetti */
+/* CONFETTI */
 function confetti(){
  let c=document.getElementById("confetti");
  let ctx=c.getContext("2d");
  c.width=window.innerWidth;
  c.height=window.innerHeight;
- for(let i=0;i<150;i++){
+ for(let i=0;i<180;i++){
   ctx.fillRect(Math.random()*c.width,Math.random()*c.height,5,5);
  }
 }
